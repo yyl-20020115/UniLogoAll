@@ -1,0 +1,73 @@
+to .unilogo.sort.listtoword :list
+  op apply "word :list
+end
+
+to .unilogo.sort.wordtolist :word
+  op map.se [?] :word
+end
+
+to .unilogo.sort.merge :.unilogo.sort.list1 :.unilogo.sort.list2 :.unilogo.sort.cmp
+  if empty? :.unilogo.sort.list1 [op :.unilogo.sort.list2]
+  if empty? :.unilogo.sort.list2 [op :.unilogo.sort.list1]
+  if apply :.unilogo.sort.cmp (list first :.unilogo.sort.list2 first :.unilogo.sort.list1) [
+      op fput first :.unilogo.sort.list2 .unilogo.sort.merge :.unilogo.sort.list1 butfirst :.unilogo.sort.list2 :.unilogo.sort.cmp
+  ]
+  op fput first :.unilogo.sort.list1 .unilogo.sort.merge butfirst :.unilogo.sort.list1 :.unilogo.sort.list2 :.unilogo.sort.cmp
+end
+
+to .unilogo.sort.mergepairwise :.unilogo.sort.listoflists :.unilogo.sort.cmp
+  if empty? :.unilogo.sort.listoflists          [op :.unilogo.sort.listoflists] 
+  if empty? butfirst :.unilogo.sort.listoflists [op :.unilogo.sort.listoflists]
+  op fput (.unilogo.sort.merge
+     first :.unilogo.sort.listoflists
+     first butfirst :.unilogo.sort.listoflists
+     :.unilogo.sort.cmp) (.unilogo.sort.mergepairwise butfirst butfirst :.unilogo.sort.listoflists :.unilogo.sort.cmp)
+end
+
+to .unilogo.sort.mergesort :.unilogo.sort.list :.unilogo.sort.cmp
+  if empty? :.unilogo.sort.list [ op :.unilogo.sort.list ]
+  op first cascade [empty? butfirst ?] [.unilogo.sort.mergepairwise ? :.unilogo.sort.cmp] map [(list ?)] :.unilogo.sort.list
+end
+
+to .unilogo.sort.defaultsortpredicate :.unilogo.sort.seq
+  if word? :.unilogo.sort.seq [op "before?]
+
+  if list? :.unilogo.sort.seq [
+    if empty? :.unilogo.sort.seq        [op "before?]
+    if number? first :.unilogo.sort.seq [op "less?]
+    op "before?
+  ]
+
+  if array? :.unilogo.sort.seq [
+    if equalp 0 count :.unilogo.sort.seq                        [op "before?]
+    if number? item first :.unilogo.sort.seq :.unilogo.sort.seq [op "less?]
+    op "before?
+  ]
+
+  op "less?
+end
+
+to sort :.unilogo.sort.seq [:.unilogo.sort.cmp .unilogo.sort.defaultsortpredicate :.unilogo.sort.seq]
+  if list?  :.unilogo.sort.seq [op                           .unilogo.sort.mergesort                          :.unilogo.sort.seq :.unilogo.sort.cmp]
+  if word?  :.unilogo.sort.seq [op .unilogo.sort.listtoword  .unilogo.sort.mergesort .unilogo.sort.wordtolist :.unilogo.sort.seq :.unilogo.sort.cmp]
+
+  if array? :.unilogo.sort.seq [
+    ifelse equalp 0 count :.unilogo.sort.seq [
+      op :.unilogo.sort.seq
+    ][
+      op listtoarray .unilogo.sort.mergesort arraytolist :.unilogo.sort.seq :.unilogo.sort.cmp
+    ]
+  ]
+
+  op :.unilogo.sort.seq
+end
+
+bury [
+  sort
+  .unilogo.sort.mergesort
+  .unilogo.sort.mergepairwise
+  .unilogo.sort.merge
+  .unilogo.sort.listtoword
+  .unilogo.sort.wordtolist
+  .unilogo.sort.defaultsortpredicate
+]
