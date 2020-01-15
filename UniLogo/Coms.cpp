@@ -508,7 +508,7 @@ NODE *lshell(NODE *args)
   bool isOk = false;
 
   CStringPrintedNode shellCommand(car(args));
-
+#ifdef _WINDOWS
   bool waitForChildProcess=false;
   if (cdr(args) != NIL)
   {
@@ -526,7 +526,7 @@ NODE *lshell(NODE *args)
       // we were passed invalid arguments
       return Unbound;
   }
-
+#endif
     const wxString& content = shellCommand.GetContent();
 
 #ifdef _WINDOWS

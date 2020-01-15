@@ -162,7 +162,7 @@ bool CLocalizedStringProvider::SkipWhitespaces(CTextStream * stream,wxString & l
 {
 	if (stream != 0) {
 		while (pos<line.length()) {
-			wchar_t ch = line[pos];
+			wchar_t ch = 0;
 
 			while (this->IsWhiteSpace(ch=line[pos]) && pos < line.length()) pos++;
 			if (pos < line.length() - 1 && line[pos] == L'/' && line[pos + 1] == L'/') {

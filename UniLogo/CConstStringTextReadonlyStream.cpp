@@ -4,7 +4,7 @@ const uchar* wcsnstr(const uchar* dest, const uchar* src, size_t dest_length, si
 {
 	size_t i = 0;
 	size_t j = 0;
-	while (i <= dest_length - 1 && j <= src_length - 1)
+	while (i <= dest_length - 1 && j <= src_length - 1 &&dest[i]!=0&& src[j]!=0)
 	{
 		if (dest[i] == src[j])
 		{
@@ -94,12 +94,13 @@ wxString CConstStringTextReadonlyStream::ReadLine()
 	}
 	else
 	{
-        uchar mb [] = {'\r','\n'};
+        uchar mb [] = {'\r','\n',0};
         
         uchar *pb = (uchar*)malloc(sizeof(unsigned short)* newline.length());
         
         if(pb!=0)
         {
+            memset(pb, 0, sizeof(unsigned short)* newline.length());
             for(size_t i = 0;i<newline.length();i++)
             {
                 pb[i] = (uchar)newline[i];

@@ -35,10 +35,10 @@ extern void init_cursors();
 #define STDCALL 
 #endif
 
-typedef unsigned long STDCALL FullTextCallBack(unsigned long, wchar_t*);
-typedef unsigned int STDCALL FullTextCallBackReversed(wchar_t*, unsigned int);
+//typedef unsigned long STDCALL FullTextCallBack(unsigned long, wchar_t*);
+//typedef unsigned int STDCALL FullTextCallBackReversed(wchar_t*, unsigned int);
 
-extern wxString GetFullText(FullTextCallBack* ftcb, int maxBufferSize = 4096);
-extern wxString GetFullTextReversed(FullTextCallBackReversed* ftcb, int maxBufferSize = 4096);
+//extern wxString GetFullText(FullTextCallBack* ftcb, int maxBufferSize = 4096);
+//extern wxString GetFullTextReversed(FullTextCallBackReversed* ftcb, int maxBufferSize = 4096);
 
 #endif // __STARTUP_H_

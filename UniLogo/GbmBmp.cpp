@@ -211,11 +211,11 @@ GBM_ERR bmp_rhdr(const wchar_t *fn, int fd, GBM *gbm)
               ((cbFix & 3) == 0 || cbFix == 42 || cbFix == 46) )
         /* OS\2 and Windows 3.0 */
     {
-        word cPlanes, cBitCount, usUnits, usReserved, usRecording, usRendering;
-        dword ulWidth, ulHeight, ulCompression;
-        dword ulSizeImage, ulXPelsPerMeter, ulYPelsPerMeter;
-        dword cclrUsed, cclrImportant, cSize1, cSize2, ulColorEncoding, ulIdentifier;
-        BOOLEAN ok;
+        word cPlanes=0, cBitCount=0, usUnits=0, usReserved=0, usRecording=0, usRendering=0;
+        dword ulWidth=0, ulHeight=0, ulCompression=0;
+        dword ulSizeImage=0, ulXPelsPerMeter=0, ulYPelsPerMeter=0;
+        dword cclrUsed=0, cclrImportant=0, cSize1=0, cSize2=0, ulColorEncoding=0, ulIdentifier=0;
+        BOOLEAN ok=0;
 
         ok  = read_dword(fd, &ulWidth);
         ok &= read_dword(fd, &ulHeight);

@@ -81,8 +81,12 @@ int numberp(NODE *snd)
         ref(stringnode);
         mustDerefStringnode = true;
     }
-
+    if(stringnode==0) return 0;
+    
     const wchar_t * p = getstrptr(stringnode);
+    if(p == 0){
+        return 0;
+    }
     int plen = getstrlen(stringnode);
     if (plen >= MAX_NUMBER)
     {

@@ -44,74 +44,74 @@ wxString g_UnilogoBaseDirectory; // The directory that contains unilogo.exe
 
 // Creates a unique filename relative to TempPath
 
-wxString GetFullText(FullTextCallBack* ftcb, int maxBufferSize)
-{
-	wxString result;
-	if (ftcb != 0) {
-		int length = MAX_PATH;
+//wxString GetFullText(FullTextCallBack* ftcb, int maxBufferSize)
+//{
+//	wxString result;
+//	if (ftcb != 0) {
+//		int length = MAX_PATH;
+//
+//		long ret = 0;
+//        wchar_t* buffer = (wchar_t*) malloc((length + 1) * sizeof(wchar_t));
+//        if(buffer!=0)
+//        {
+//            do {
+//                buffer = (wchar_t*) realloc(buffer, (length + 1) * sizeof(wchar_t));
+//                if (buffer != 0) {
+//                    buffer[length] = L'\0';
+//
+//                    ret = ftcb(length, buffer);
+//                    if (ret < length) {
+//                        break;
+//                    }
+//                    else {
+//                        free(buffer);
+//
+//                        length <<= 1;
+//                    }
+//                }
+//                else {
+//                    break;
+//                }
+//            } while (true);
+//
+//            if (ret > 0 && buffer != 0) {
+//                result.append(buffer,wcslen(buffer));
+//            }
+//            free(buffer);
+//		}
+//	}
+//	return result;
+//}
 
-		long ret = 0;
-		wchar_t* buffer = 0;
-
-		do {
-			buffer = (wchar_t*)realloc(buffer, (length + 1) * sizeof(wchar_t));
-			if (buffer != 0) {
-				buffer[length] = L'\0';
-
-				ret = ftcb(length, buffer);
-				if (ret < length) {
-					break;
-				}
-				else {
-					free(buffer);
-
-					length <<= 1;
-				}
-			}
-			else {
-				break;
-			}
-		} while (true);
-
-		if (ret > 0 && buffer != 0) {
-			result = buffer;
-		}
-		if (buffer != 0) {
-			free(buffer);
-		}
-	}
-	return result;
-}
-
-wxString GetFullTextReversed(FullTextCallBackReversed* ftcb, int maxBufferSize)
-{
-	wxString result;
-	if (ftcb != 0) {
-		int length = MAX_PATH;
-
-		int ret = 0;
-		wchar_t* buffer = 0;
-
-		do {
-			buffer = new wchar_t[length];
-			ret = ftcb(buffer, length);
-			if (ret < length) {
-				break;
-			}
-			else {
-				delete[] buffer;
-
-				length <<= 1;
-			}
-		} while (true);
-
-		if (ret > 0) {
-			result = buffer;
-		}
-		delete[] buffer;
-	}
-	return result;
-}
+//wxString GetFullTextReversed(FullTextCallBackReversed* ftcb, int maxBufferSize)
+//{
+//	wxString result;
+//	if (ftcb != 0) {
+//		int length = MAX_PATH;
+//
+//		int ret = 0;
+//		wchar_t* buffer = 0;
+//
+//		do {
+//			buffer = new wchar_t[length];
+//			ret = ftcb(buffer, length);
+//			if (ret < length) {
+//				break;
+//			}
+//			else {
+//				delete[] buffer;
+//
+//				length <<= 1;
+//			}
+//		} while (true);
+//
+//		if (ret > 0) {
+//			result = buffer;
+//		}
+//		delete[] buffer;
+//	}
+//	return result;
+//}
 void init_graphics()
 {
 	// set appropriate default colors

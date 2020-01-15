@@ -33,12 +33,11 @@ CStringPrintedNode::CStringPrintedNode(
 
 
 	// Print the node into the correctly sized buffer.
-	size_t newTotalBytesNeeded = PrintNodeToString(
+	PrintNodeToString(
 		Node,
 		&m_Buffer,
 		printDepthLimit,
 		printWidthLimit);
-    newTotalBytesNeeded = 0;
 
 	// The number of bytes needed shouldn't have changed
 	// from the first attempt to the second attempt.

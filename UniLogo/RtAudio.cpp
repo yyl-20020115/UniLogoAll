@@ -536,7 +536,7 @@ struct CoreHandle {
   bool internalDrain;     // Indicates if stop is initiated from callback or not.
 
   CoreHandle()
-    :deviceBuffer(0), drainCounter(0), internalDrain(false) { nStreams[0] = 1; nStreams[1] = 1; id[0] = 0; id[1] = 0; xrun[0] = false; xrun[1] = false; }
+    :id(),deviceBuffer(0), drainCounter(0), internalDrain(false) { nStreams[0] = 1; nStreams[1] = 1; id[0] = 0; id[1] = 0; xrun[0] = false; xrun[1] = false; }
 };
 
 RtApiCore:: RtApiCore()
@@ -971,9 +971,9 @@ bool RtApiCore :: probeDeviceOpen( unsigned int device, StreamMode mode, unsigne
   AudioDeviceID id = deviceList[ device ];
 
   // Setup for stream mode.
-  bool isInput = false;
+  //bool isInput = false;
   if ( mode == StreamMode::INPUT ) {
-    isInput = true;
+    //isInput = true;
     property.mScope = kAudioDevicePropertyScopeInput;
   }
   else
@@ -1430,7 +1430,8 @@ bool RtApiCore :: probeDeviceOpen( unsigned int device, StreamMode mode, unsigne
   // Setup the device property listener for over/underload.
   property.mSelector = kAudioDeviceProcessorOverload;
   property.mScope = kAudioObjectPropertyScopeGlobal;
-  result = AudioObjectAddPropertyListener( id, &property, xrunListener, (void *) handle );
+  //result =
+    AudioObjectAddPropertyListener( id, &property, xrunListener, (void *) handle );
 
   return (bool)ST::SUCCESS;
 
@@ -1479,13 +1480,13 @@ void RtApiCore :: closeStream( void )
         error( RtAudioError::Type::WARNING );
       }
     }
-    if ( stream_.state == StreamState::STREAM_RUNNING )
+    if (handle!=0 && stream_.state == StreamState::STREAM_RUNNING )
       AudioDeviceStop( handle->id[0], callbackHandler );
 #if defined( MAC_OS_X_VERSION_10_5 ) && ( MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 )
-    AudioDeviceDestroyIOProcID( handle->id[0], handle->procId[0] );
+    if (handle!=0) AudioDeviceDestroyIOProcID( handle->id[0], handle->procId[0] );
 #else
     // deprecated in favor of AudioDeviceDestroyIOProcID()
-    AudioDeviceRemoveIOProc( handle->id[0], callbackHandler );
+    if (handle!=0) AudioDeviceRemoveIOProc( handle->id[0], callbackHandler );
 #endif
   }
 
@@ -1503,9 +1504,9 @@ void RtApiCore :: closeStream( void )
       }
     }
     if ( stream_.state == StreamState::STREAM_RUNNING )
-      AudioDeviceStop( handle->id[1], callbackHandler );
+      if (handle!=0) AudioDeviceStop( handle->id[1], callbackHandler );
 #if defined( MAC_OS_X_VERSION_10_5 ) && ( MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 )
-    AudioDeviceDestroyIOProcID( handle->id[1], handle->procId[1] );
+    if (handle!=0) AudioDeviceDestroyIOProcID( handle->id[1], handle->procId[1] );
 #else
     // deprecated in favor of AudioDeviceDestroyIOProcID()
     AudioDeviceRemoveIOProc( handle->id[1], callbackHandler );
@@ -1523,10 +1524,12 @@ void RtApiCore :: closeStream( void )
     free( stream_.deviceBuffer );
     stream_.deviceBuffer = 0;
   }
-
+    
+    if(handle!=0){
   // Destroy pthread condition variable.
-  pthread_cond_destroy( &handle->condition );
-  delete handle;
+      pthread_cond_destroy( &handle->condition );
+      delete handle;
+    }
   stream_.apiHandle = 0;
 
   stream_.mode = StreamMode::UNINITIALIZED;

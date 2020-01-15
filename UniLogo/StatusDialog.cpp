@@ -200,7 +200,9 @@ CStatusDialog::CStatusDialog(wxWindow * Parent)
                 wxEXPAND | wxLEFT | wxRIGHT,
                 5);
 
-            *data[i].FieldValue[j] = fieldValue;
+            if(data[i].FieldValue[j]!=0){
+                *data[i].FieldValue[j] = fieldValue;
+            }
         }
     }
 

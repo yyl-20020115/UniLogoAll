@@ -445,8 +445,6 @@ CMainFrame::CMainFrame(
 #endif
 
 {
-	wxString SaveAsText = GetResourceString(L"LOCALIZED_FILE_SAVEAS");
-
 	//
     // Construct the main menu
     //
@@ -455,9 +453,9 @@ CMainFrame::CMainFrame(
         {(GetResourceString(L"LOCALIZED_FILE_LOAD")),             (int)MainFrameMenuIds::ID_FILELOAD},
         {(GetResourceString(L"LOCALIZED_FILE_OPEN")),             (int)MainFrameMenuIds::ID_FILEOPEN},
         {GetResourceString(L"LOCALIZED_FILE_SAVE"),             (int)MainFrameMenuIds::ID_FILESAVE},
-		{SaveAsText,          (int)MainFrameMenuIds:: ID_FILESAVEAS},
-		//{this->ModifyMenuTextForUnicode(SaveAsText,L"-UTF&8+BOM"), (int)MainFrameMenuIds::ID_FILESAVEAS_UTF8},
-		//{this->ModifyMenuTextForUnicode(SaveAsText,L"-&UTF16+BOM"), (int)MainFrameMenuIds::ID_FILESAVEAS_UTF16},
+		{GetResourceString(L"LOCALIZED_FILE_SAVEAS"),          (int)MainFrameMenuIds:: ID_FILESAVEAS},
+		//{this->ModifyMenuTextForUnicode(GetResourceString(L"LOCALIZED_FILE_SAVEAS"),L"-UTF&8+BOM"), (int)MainFrameMenuIds::ID_FILESAVEAS_UTF8},
+		//{this->ModifyMenuTextForUnicode(GetResourceString(L"LOCALIZED_FILE_SAVEAS"),L"-&UTF16+BOM"), (int)MainFrameMenuIds::ID_FILESAVEAS_UTF16},
 #ifdef _WINDOWS
 		{GetResourceString(L"LOCALIZED_FILE_SETASSCREENSAVER"), (int)MainFrameMenuIds::ID_FILESETASSCREENSAVER},
 #endif

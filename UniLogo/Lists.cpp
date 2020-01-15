@@ -91,7 +91,7 @@ NODE *lbutfirst(NODE *args)
 
 NODE *lbutlast(NODE *args)
 {
-    NODE *val = Unbound, *lastnode =Unbound, *tnode=Unbound;
+    NODE *val = Unbound, *lastnode =Unbound;
 
     NODE * arg = bfable_arg(args);
     if (NOT_THROWING)
@@ -102,7 +102,7 @@ NODE *lbutlast(NODE *args)
             val = NIL;
             while (cdr(args) != NIL)
             {
-                tnode = cons_list(car(args));
+                NODE* tnode = cons_list(car(args));
                 if (val == NIL)
                 {
                     val = tnode;

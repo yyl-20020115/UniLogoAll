@@ -251,6 +251,8 @@ static NODE *directory_helper(bool OnlyListDirectories)
 
         FindClose(searchHandle);
     }
+#else
+    
 #endif
 
     // The MSDN reports that FindNextFile doesn't guarantee a order, so we sort

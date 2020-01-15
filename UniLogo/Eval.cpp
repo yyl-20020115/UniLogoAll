@@ -145,11 +145,12 @@ NODE * spop(NODE *stack)
 NODE * spush(NODE *obj, NODE *stack)
 {
     NODE *newTop = newnode(CONS);
-
-    newTop->nunion.ncons.ncar = vref(obj);
-    newTop->nunion.ncons.ncdr = stack;
-    newTop->nunion.ncons.nobj = NIL;
-    ref(newTop);
+    if(newTop!=0){
+        newTop->nunion.ncons.ncar = vref(obj);
+        newTop->nunion.ncons.ncdr = stack;
+        newTop->nunion.ncons.nobj = NIL;
+        ref(newTop);
+    }
     return newTop;
 }
 
@@ -268,33 +269,45 @@ void trace_input(NODE * UnquotedArgument)
     print_space(GetOutputStream(), MESSAGETYPE::Trace);
 }
 
+struct EVALUATOR_STACK_FRAME
+{
+    EVALUATOR_STACK_FRAME * NextFrame;
+    labels             ReturnLabel;
+
+    NODE * ReferencedNode1;
+    NODE * ReferencedNode2;
+    NODE * ReferencedNode3;
+    NODE * ReferencedNode4;
+    NODE * ReferencedNode5;
+    NODE * ReferencedNode6;
+    NODE * ReferencedNode7;
+    NODE * ReferencedNode8;
+    NODE * ReferencedNode9;
+    NODE * ReferencedNode10;
+
+    FIXNUM Number1;
+    FIXNUM Number2;
+    FIXNUM Number3;
+    FIXNUM Number4;
+
+    NODE * UnreferencedNode1;
+    NODE * UnreferencedNode2;
+public:
+    EVALUATOR_STACK_FRAME()
+        :NextFrame(0),ReturnLabel(labels::all_done),ReferencedNode1(0),ReferencedNode2(0),
+        ReferencedNode3(0),ReferencedNode4(0),ReferencedNode5(0),ReferencedNode6(0),
+        ReferencedNode7(0),ReferencedNode8(0),ReferencedNode9(0),ReferencedNode10(0),
+        Number1(0),Number2(0),Number3(0),Number4(0)
+    {
+        
+    }
+    
+};
+
 class CEvaluatorStack
 {
 private:
-    struct EVALUATOR_STACK_FRAME
-    {
-        EVALUATOR_STACK_FRAME * NextFrame;
-        labels             ReturnLabel;
 
-        NODE * ReferencedNode1;
-        NODE * ReferencedNode2;
-        NODE * ReferencedNode3;
-        NODE * ReferencedNode4;
-        NODE * ReferencedNode5;
-        NODE * ReferencedNode6;
-        NODE * ReferencedNode7;
-        NODE * ReferencedNode8;
-        NODE * ReferencedNode9;
-        NODE * ReferencedNode10;
-
-        FIXNUM Number1;
-        FIXNUM Number2;
-        FIXNUM Number3;
-        FIXNUM Number4;
-
-        NODE * UnreferencedNode1;
-        NODE * UnreferencedNode2;
-    };
 
     EVALUATOR_STACK_FRAME * m_StackTop;
     EVALUATOR_STACK_FRAME * m_FreeList;
@@ -326,7 +339,7 @@ public:
     labels
     GetReturnLabel() const
     {
-        return m_StackTop->ReturnLabel;
+        return m_StackTop!=0 ? m_StackTop->ReturnLabel : labels::all_done;
     }
 
 
@@ -335,7 +348,7 @@ public:
         labels  ReturnLabel
         )
     {
-        EVALUATOR_STACK_FRAME * stackFrame;
+        EVALUATOR_STACK_FRAME * stackFrame = 0;
 
         // First, check the free list for a block of memory
         if (m_FreeList != NULL)
@@ -352,15 +365,19 @@ public:
             if (stackFrame == NULL)
             {
                 err_logo(ERR_TYPES::OUT_OF_MEM_UNREC, NIL);
+                return;
             }
+            memset(stackFrame,0,sizeof(*stackFrame));
         }
 
-        // Push the new node on top of the in-use stack.
-        stackFrame->NextFrame = m_StackTop;
-        m_StackTop = stackFrame;
+        if(stackFrame!=0){
+            // Push the new node on top of the in-use stack.
+            stackFrame->NextFrame = m_StackTop;
+            m_StackTop = stackFrame;
 
-        // Set the return point.
-        stackFrame->ReturnLabel = ReturnLabel;
+            // Set the return point.
+            stackFrame->ReturnLabel = ReturnLabel;
+        }
     }
 
     void
@@ -390,14 +407,16 @@ public:
         // Allocate the new stack frame
         PushFrame(ReturnLabel);
 
-        // Save the registers.
-        m_StackTop->ReferencedNode1 = vref(Node1);
-        m_StackTop->ReferencedNode2 = vref(Node2);
-        m_StackTop->ReferencedNode3 = vref(Node3);
-        m_StackTop->ReferencedNode4 = vref(Node4);
+        if(m_StackTop!=0){
+            // Save the registers.
+            m_StackTop->ReferencedNode1 = vref(Node1);
+            m_StackTop->ReferencedNode2 = vref(Node2);
+            m_StackTop->ReferencedNode3 = vref(Node3);
+            m_StackTop->ReferencedNode4 = vref(Node4);
 
-        m_StackTop->Number1 = Number1;
-        m_StackTop->Number2 = Number2;
+            m_StackTop->Number1 = Number1;
+            m_StackTop->Number2 = Number2;
+        }
     }
 
     void
@@ -415,7 +434,7 @@ public:
     {
         // Allocate the new stack frame
         PushFrame(ReturnLabel);
-
+        if(m_StackTop!=0){
         // Save the registers.
         m_StackTop->ReferencedNode1 = vref(Node1);
         m_StackTop->ReferencedNode2 = vref(Node2);
@@ -425,6 +444,7 @@ public:
         m_StackTop->ReferencedNode6 = vref(Node6);
         m_StackTop->ReferencedNode7 = vref(Node7);
         m_StackTop->ReferencedNode8 = vref(Node8);
+        }
     }
 
     void
@@ -440,7 +460,7 @@ public:
     {
         // Allocate the new stack frame
         PushFrame(ReturnLabel);
-
+        if(m_StackTop!=0){
         // Save the registers
         m_StackTop->ReferencedNode1 = vref(Node1);
         m_StackTop->ReferencedNode2 = vref(Node2);
@@ -449,6 +469,7 @@ public:
         m_StackTop->Number1 = Number1;
         m_StackTop->Number2 = Number2;
         m_StackTop->Number3 = Number3;
+        }
     }
 
     void
@@ -471,7 +492,7 @@ public:
     {
         // Allocate the new stack frame.
         PushFrame(ReturnLabel);
-
+        if(m_StackTop!=0){
         // Save the registers.
         m_StackTop->ReferencedNode1 = vref(Node1);
         m_StackTop->ReferencedNode2 = vref(Node2);
@@ -488,6 +509,7 @@ public:
 
         m_StackTop->UnreferencedNode1 = UnreferencedNode1;
         m_StackTop->UnreferencedNode2 = UnreferencedNode2;
+        }
     }
 
     void
@@ -509,7 +531,7 @@ public:
     {
         // Allocate the new stack frame.
         PushFrame(ReturnLabel);
-
+        if(m_StackTop!=0){
         // Save the registers.
         m_StackTop->ReferencedNode1  = vref(Node1);
         m_StackTop->ReferencedNode2  = vref(Node2);
@@ -524,6 +546,7 @@ public:
 
         m_StackTop->Number1 = Number1;
         m_StackTop->Number2 = Number2;
+        }
     }
 
     void
@@ -535,10 +558,11 @@ public:
     {
         // Allocate the new stack frame
         PushFrame(ReturnLabel);
-
+        if(m_StackTop!=0){
         // Save the registers
         m_StackTop->Number1 = Number1;
         m_StackTop->Number2 = Number2;
+        }
     }
 
 
@@ -555,7 +579,7 @@ public:
     {
         // Allocate the new stack frame
         PushFrame(ReturnLabel);
-
+        if(m_StackTop!=0){
         // Save the registers
         m_StackTop->ReferencedNode1 = vref(Node1);
         m_StackTop->ReferencedNode2 = vref(Node2);
@@ -564,6 +588,7 @@ public:
         m_StackTop->Number2 = Number2;
         m_StackTop->Number3 = Number3;
         m_StackTop->Number4 = Number4;
+        }
     }
 
     void
@@ -578,7 +603,7 @@ public:
     {
         // Allocate the new stack frame
         PushFrame(ReturnLabel);
-
+        if(m_StackTop!=0){
         // Save the registers.
         m_StackTop->ReferencedNode1  = vref(Node1);
         m_StackTop->ReferencedNode2  = vref(Node2);
@@ -586,6 +611,7 @@ public:
 
         m_StackTop->Number1 = Number1;
         m_StackTop->Number2 = Number2;
+        }
     }
 
 private:
@@ -606,11 +632,13 @@ public:
     {
         // Pop the stack frame.
         EVALUATOR_STACK_FRAME * poppedFrame = m_StackTop;
-        m_StackTop = m_StackTop->NextFrame;
-
+        if(m_StackTop!=0)
+        {
+             m_StackTop = m_StackTop->NextFrame;
         // Put this node onto the free list, in case we need another one.
-        poppedFrame->NextFrame = m_FreeList;
-        m_FreeList = poppedFrame;
+            poppedFrame->NextFrame = m_FreeList;
+            m_FreeList = poppedFrame;
+        }
     }
 
     void
@@ -618,7 +646,7 @@ public:
         NODE *& Node1
         )
     {
-        RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
+         if(m_StackTop!=0) RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
 
         PopFrame();
     }
@@ -633,14 +661,16 @@ public:
         FIXNUM  & Number2
         )
     {
-        RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
-        RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
-        RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
-        RestoreReferencedNode(Node4, m_StackTop->ReferencedNode4);
+        if(m_StackTop!=0){
+            RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
+            RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
+            RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
+            RestoreReferencedNode(Node4, m_StackTop->ReferencedNode4);
 
-        Number1 = m_StackTop->Number1;
-        Number2 = m_StackTop->Number2;
+            Number1 = m_StackTop->Number1;
+            Number2 = m_StackTop->Number2;
 
+        }
         PopFrame();
     }
 
@@ -656,15 +686,16 @@ public:
         NODE      *& Node8
         )
     {
-        RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
-        RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
-        RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
-        RestoreReferencedNode(Node4, m_StackTop->ReferencedNode4);
-        RestoreReferencedNode(Node5, m_StackTop->ReferencedNode5);
-        RestoreReferencedNode(Node6, m_StackTop->ReferencedNode6);
-        RestoreReferencedNode(Node7, m_StackTop->ReferencedNode7);
-        RestoreReferencedNode(Node8, m_StackTop->ReferencedNode8);
-
+        if(m_StackTop!=0){
+            RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
+            RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
+            RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
+            RestoreReferencedNode(Node4, m_StackTop->ReferencedNode4);
+            RestoreReferencedNode(Node5, m_StackTop->ReferencedNode5);
+            RestoreReferencedNode(Node6, m_StackTop->ReferencedNode6);
+            RestoreReferencedNode(Node7, m_StackTop->ReferencedNode7);
+            RestoreReferencedNode(Node8, m_StackTop->ReferencedNode8);
+        }
         PopFrame();
     }
 
@@ -685,22 +716,23 @@ public:
         NODE      *& UnreferencedNode2
         )
     {
-        RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
-        RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
-        RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
-        RestoreReferencedNode(Node4, m_StackTop->ReferencedNode4);
-        RestoreReferencedNode(Node5, m_StackTop->ReferencedNode5);
-        RestoreReferencedNode(Node6, m_StackTop->ReferencedNode6);
-        RestoreReferencedNode(Node7, m_StackTop->ReferencedNode7);
-        RestoreReferencedNode(Node8, m_StackTop->ReferencedNode8);
-        RestoreReferencedNode(Node9, m_StackTop->ReferencedNode9);
+        if(m_StackTop!=0){
+            RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
+            RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
+            RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
+            RestoreReferencedNode(Node4, m_StackTop->ReferencedNode4);
+            RestoreReferencedNode(Node5, m_StackTop->ReferencedNode5);
+            RestoreReferencedNode(Node6, m_StackTop->ReferencedNode6);
+            RestoreReferencedNode(Node7, m_StackTop->ReferencedNode7);
+            RestoreReferencedNode(Node8, m_StackTop->ReferencedNode8);
+            RestoreReferencedNode(Node9, m_StackTop->ReferencedNode9);
 
-        Number1 = m_StackTop->Number1;
-        Number2 = m_StackTop->Number2;
+            Number1 = m_StackTop->Number1;
+            Number2 = m_StackTop->Number2;
 
-        UnreferencedNode1 = m_StackTop->UnreferencedNode1;
-        UnreferencedNode2 = m_StackTop->UnreferencedNode2;
-
+            UnreferencedNode1 = m_StackTop->UnreferencedNode1;
+            UnreferencedNode2 = m_StackTop->UnreferencedNode2;
+        }
         PopFrame();
     }
 
@@ -714,6 +746,7 @@ public:
         FIXNUM      & Number3
         )
     {
+        if(m_StackTop!=0){
         RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
         RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
         RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
@@ -721,7 +754,7 @@ public:
         Number1 = m_StackTop->Number1;
         Number2 = m_StackTop->Number2;
         Number3 = m_StackTop->Number3;
-
+        }
         PopFrame();
     }
 
@@ -741,20 +774,21 @@ public:
         FIXNUM     & Number2
         )
     {
-        RestoreReferencedNode(Node1,  m_StackTop->ReferencedNode1);
-        RestoreReferencedNode(Node2,  m_StackTop->ReferencedNode2);
-        RestoreReferencedNode(Node3,  m_StackTop->ReferencedNode3);
-        RestoreReferencedNode(Node4,  m_StackTop->ReferencedNode4);
-        RestoreReferencedNode(Node5,  m_StackTop->ReferencedNode5);
-        RestoreReferencedNode(Node6,  m_StackTop->ReferencedNode6);
-        RestoreReferencedNode(Node7,  m_StackTop->ReferencedNode7);
-        RestoreReferencedNode(Node8,  m_StackTop->ReferencedNode8);
-        RestoreReferencedNode(Node9,  m_StackTop->ReferencedNode9);
-        RestoreReferencedNode(Node10, m_StackTop->ReferencedNode10);
+        if(m_StackTop!=0){
+            RestoreReferencedNode(Node1,  m_StackTop->ReferencedNode1);
+            RestoreReferencedNode(Node2,  m_StackTop->ReferencedNode2);
+            RestoreReferencedNode(Node3,  m_StackTop->ReferencedNode3);
+            RestoreReferencedNode(Node4,  m_StackTop->ReferencedNode4);
+            RestoreReferencedNode(Node5,  m_StackTop->ReferencedNode5);
+            RestoreReferencedNode(Node6,  m_StackTop->ReferencedNode6);
+            RestoreReferencedNode(Node7,  m_StackTop->ReferencedNode7);
+            RestoreReferencedNode(Node8,  m_StackTop->ReferencedNode8);
+            RestoreReferencedNode(Node9,  m_StackTop->ReferencedNode9);
+            RestoreReferencedNode(Node10, m_StackTop->ReferencedNode10);
 
-        Number1 = m_StackTop->Number1;
-        Number2 = m_StackTop->Number2;
-
+            Number1 = m_StackTop->Number1;
+            Number2 = m_StackTop->Number2;
+        }
         PopFrame();
     }
 
@@ -764,9 +798,10 @@ public:
         FIXNUM      & Number2
         )
     {
-        Number1 = m_StackTop->Number1;
-        Number2 = m_StackTop->Number2;
-
+        if(m_StackTop!=0){
+            Number1 = m_StackTop->Number1;
+            Number2 = m_StackTop->Number2;
+        }
         PopFrame();
     }
 
@@ -780,14 +815,15 @@ public:
         FIXNUM      & Number4
         )
     {
-        RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
-        RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
+        if(m_StackTop!=0){
+            RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
+            RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
 
-        Number1 = m_StackTop->Number1;
-        Number2 = m_StackTop->Number2;
-        Number3 = m_StackTop->Number3;
-        Number4 = m_StackTop->Number4;
-
+            Number1 = m_StackTop->Number1;
+            Number2 = m_StackTop->Number2;
+            Number3 = m_StackTop->Number3;
+            Number4 = m_StackTop->Number4;
+        }
         PopFrame();
     }
 
@@ -800,13 +836,14 @@ public:
         FIXNUM     & Number2
         )
     {
+        if(m_StackTop!=0){
         RestoreReferencedNode(Node1, m_StackTop->ReferencedNode1);
         RestoreReferencedNode(Node2, m_StackTop->ReferencedNode2);
         RestoreReferencedNode(Node3, m_StackTop->ReferencedNode3);
 
         Number1 = m_StackTop->Number1;
         Number2 = m_StackTop->Number2;
-
+        }
         PopFrame();
     }
 };
