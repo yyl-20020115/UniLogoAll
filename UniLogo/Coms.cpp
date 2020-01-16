@@ -41,7 +41,7 @@ NODE *loutput(NODE *arg)
 {
     if (NOT_THROWING)
     {
-        stopping_flag = CTRLTYPE::OUTPUT;
+        SetStoppingFlag(CTRLTYPE::OUTPUT);
         assign(output_node, car(arg));
     }
     return Unbound;
@@ -51,7 +51,7 @@ NODE *lstop(NODE *)
 {
     if (NOT_THROWING)
     {
-        stopping_flag = CTRLTYPE::STOP;
+        SetStoppingFlag(CTRLTYPE::STOP);
     }
     return Unbound;
 }
@@ -115,7 +115,7 @@ NODE *lthrow(NODE *arg)
         }
         else
         {
-            stopping_flag = CTRLTYPE::THROWING;
+            SetStoppingFlag( CTRLTYPE::THROWING);
             assign(throw_node, car(arg));
             if (cdr(arg) != NIL)
             {
@@ -190,7 +190,7 @@ NODE *land(NODE *args)
          current_arg = cdr(current_arg))
     {
         bool arg = boolean_arg(current_arg);
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             return Unbound;
         }
@@ -218,7 +218,7 @@ NODE *lor(NODE *args)
          current_arg = cdr(current_arg))
     {
         bool arg = boolean_arg(current_arg);
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             return Unbound;
         }
@@ -311,7 +311,7 @@ NODE *lrepeat(NODE *args)
     NODE * cnt       = nonnegative_int_arg(args);
     NODE * to_repeat = lrun(cdr(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -328,7 +328,7 @@ NODE *lforever(NODE *args)
 {
     NODE *to_repeat = lrun(args);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }

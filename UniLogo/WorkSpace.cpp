@@ -1587,7 +1587,7 @@ NODE *lnamep(NODE *args)
 NODE *lprocedurep(NODE *args)
 {
     NODE *arg = name_arg(args);
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1617,7 +1617,7 @@ enum class PROCTYPE : int
 static NODE *check_proctype(NODE *args, PROCTYPE wanted)
 {
     NODE * arg = proc_name_arg(args);
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1776,7 +1776,7 @@ NODE *lcopydef(NODE *args)
     NODE * arg1 = proc_name_arg(args);
     NODE * arg2 = proc_name_arg(cdr(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1784,7 +1784,7 @@ NODE *lcopydef(NODE *args)
     arg1 = intern(arg1);
     arg2 = intern(arg2);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }

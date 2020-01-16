@@ -460,7 +460,7 @@ NODE *lallopen(NODE *)
 NODE *lclose(NODE *arg)
 {
     NODE * filename = string_arg(arg);
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -802,11 +802,11 @@ void silent_load(NODE *arg, const wchar_t *prefix)
     bool isOk = fileload(filename,true,0);
     if (isOk)
     {
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             // There was an error parsing this file.
             // Open it in the editor so that it can be debugged.
-            stopping_flag = CTRLTYPE::RUN;
+            SetStoppingFlag(CTRLTYPE::RUN);
             OpenEditorToLocationOfFirstError(filename);
         }
     }
@@ -969,7 +969,7 @@ NODE *lreadchars(NODE *args)
     size_t totalCharsRequested = (size_t) getint(nonnegative_int_arg(args));
     size_t totalCharsRead      = 0;
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -983,7 +983,8 @@ NODE *lreadchars(NODE *args)
 
 	GetInputBlocking() = true;
 
-    wchar_t *strhead = 0, *strptr = 0;
+    wchar_t *strptr = 0;
+    unsigned int *strhead = 0;
     if (!setjmp(iblk_buf))
     {
         // TODO: Don't allocate more bytes than the file contains.
@@ -994,26 +995,26 @@ NODE *lreadchars(NODE *args)
 		g_Reader.GetStream()->SetPosition(cp, SEEK_SET);
 		
 		size_t left_size = (size_t)(dp - cp);
-		size_t full_size = sizeof(unsigned short) + (totalCharsRequested + 1) * sizeof(wchar_t);
+		size_t full_size = sizeof(unsigned int) + (totalCharsRequested + 1) * sizeof(wchar_t);
 		size_t buff_size = (full_size> left_size ? left_size:full_size);
 
-        strhead = (wchar_t *) malloc(buff_size);
+        strhead = (unsigned int *) malloc(buff_size);
         if (strhead == NULL)
         {
             err_logo(ERR_TYPES::OUT_OF_MEM, NIL);
             return Unbound;
         }
 		memset(strhead, 0, buff_size);
-        strptr = (wchar_t*)((char*) strhead + sizeof(unsigned short));
+        strptr = (wchar_t*)((char*) strhead + sizeof(unsigned int));
 		//totalBytesRead = fread(strptr, 1, totalBytesRequested, g_Reader.GetStream());
 		totalCharsRead = g_Reader.GetStream()->Read(strptr, totalCharsRequested);
-		unsigned short * temp = (unsigned short *) strhead;
-        setstrrefcnt(temp, 0);
+        
+        setstrrefcnt(strhead, 0);
     }
 
 	GetInputBlocking() = false;
 
-    if (stopping_flag == CTRLTYPE::THROWING) 
+    if (GetStoppingFlag() == CTRLTYPE::THROWING) 
     {
         free(strhead);
         return Unbound;

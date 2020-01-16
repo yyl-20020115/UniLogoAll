@@ -261,7 +261,7 @@ NODE *binary(NODE *args, wchar_t fcn)
     NODE * arg = get_arg_for_function(args, fcn);
 
     args = cdr(args);
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -464,7 +464,7 @@ NODE *binary(NODE *args, wchar_t fcn)
             arg = get_arg_for_function(args, fcn);
 
             args = cdr(args);
-            if (stopping_flag == CTRLTYPE::THROWING) 
+            if (GetStoppingFlag() == CTRLTYPE::THROWING) 
             {
                 return Unbound;
             }

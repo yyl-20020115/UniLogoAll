@@ -394,7 +394,7 @@ NODE *lcleartimer(NODE *args)
 {
 	// get args
 	int id =(int)getint(ranged_integer_arg(args, 1, MAX_TIMERS - 1));
-	if (stopping_flag == CTRLTYPE::THROWING)
+	if (GetStoppingFlag() == CTRLTYPE::THROWING)
 	{
 		return Unbound;
 	}

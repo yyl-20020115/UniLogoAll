@@ -35,7 +35,7 @@ extern NODE *didnt_get_output;
 extern NODE *output_node;
 extern NODE *last_call;
 extern NODE *didnt_output_name;
-extern CTRLTYPE stopping_flag;
+//extern CTRLTYPE stopping_flag;
 extern FIXNUM tailcall;
 extern FIXNUM dont_fix_ift;
 
@@ -48,5 +48,7 @@ const FIXNUM VALUE_STATUS_NoValueInMacro      = 4; // no value in macro (repeat)
 const FIXNUM VALUE_STATUS_ValueMaybeOkInMacro = 5; // value maybe ok in macro (catch)
 
 extern int g_CatchErrorCount;
+extern CTRLTYPE GetStoppingFlag();
+extern void SetStoppingFlag(CTRLTYPE f);
 
 #endif 

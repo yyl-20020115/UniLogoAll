@@ -99,8 +99,8 @@ err_print_helper(CTextStream* Buffer = 0)
         InitializeStringPrintInformation(Buffer);
     }
 
-    CTRLTYPE save_flag = stopping_flag;
-    stopping_flag = CTRLTYPE::RUN;
+    CTRLTYPE save_flag = GetStoppingFlag();
+    SetStoppingFlag(CTRLTYPE::RUN);
     print_backslashes = true;
 
     if (g_ErrorArguments == NIL)
@@ -153,7 +153,7 @@ err_print_helper(CTextStream* Buffer = 0)
     }
 
     print_backslashes = false;
-    stopping_flag = save_flag;
+    SetStoppingFlag(save_flag);
 }
 
 void err_print()
@@ -565,7 +565,7 @@ err_logo(
         new_throw_node = Error.GetNode();
     }
 
-    stopping_flag = CTRLTYPE::THROWING;
+    SetStoppingFlag(CTRLTYPE::THROWING);
     assign(throw_node, new_throw_node);
     assign(output_node, Unbound);
     return Unbound;
@@ -673,7 +673,7 @@ NODE *lpause(NODE*)
         g_ValueStatus = VALUE_STATUS_ValueMaybeOkInMacro;
         eval_driver(elist);
  
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             if (compare_node(throw_node, Pause, true) == 0)
             {
@@ -682,7 +682,7 @@ NODE *lpause(NODE*)
                 // Reset back to a running node, cleanup, and return.
                 NODE * val = vref(output_node);
                 assign(output_node, Unbound);
-                stopping_flag = CTRLTYPE::RUN;
+                SetStoppingFlag(CTRLTYPE::RUN);
 
                 // REVISIT: This is the same cleanup logic
                 // that is run on exit, so it should be possible
@@ -706,7 +706,7 @@ NODE *lpause(NODE*)
                 // user provided.  Print the error, but remain in
                 // pause mode.
                 err_print();
-                stopping_flag = CTRLTYPE::RUN;
+                SetStoppingFlag(CTRLTYPE::RUN);
             }
         }
 
@@ -769,7 +769,7 @@ NODE *lnoyield(NODE *)
 
 NODE *lcontinue(NODE *args)
 {
-    stopping_flag = CTRLTYPE::THROWING;
+    SetStoppingFlag(CTRLTYPE::THROWING);
     assign(throw_node, Pause);
     if (args != NIL)
     {

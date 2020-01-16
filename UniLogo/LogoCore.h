@@ -28,7 +28,7 @@ void trace_node_change(struct NODE * Node);
 #endif // DEBUG
 
 
-#define check_throwing (check_stop(false) || stopping_flag == CTRLTYPE::THROWING)
+#define check_throwing (check_stop(false) || GetStoppingFlag() == CTRLTYPE::THROWING)
 
 enum class mode_type : int
 {
@@ -319,7 +319,7 @@ struct NODE
         struct
         {
             const wchar_t * ptr;
-            wchar_t       * head;
+            unsigned int  * head;
             int          len;
         }
             nstring;
@@ -467,29 +467,29 @@ getobject(const NODE * node)
 #define setstrhead(node,ptr)    ((node)->nunion.nstring.head = (ptr))
 
 inline 
-unsigned short
-getstrrefcnt(const unsigned short * refcnt)
+unsigned int
+getstrrefcnt(const unsigned int * refcnt)
 {
     return *refcnt;
 }
 
 inline 
 void
-setstrrefcnt(unsigned short * refcnt, unsigned short value)
+setstrrefcnt(unsigned int * refcnt, unsigned int value)
 {
     *refcnt = value;
 }
 
 inline 
-unsigned short
-incstrrefcnt(unsigned short * refcnt)
+unsigned int
+incstrrefcnt(unsigned int * refcnt)
 {
     return (*refcnt)++;
 }
 
 inline 
-unsigned short
-decstrrefcnt(unsigned short * refcnt)
+unsigned int
+decstrrefcnt(unsigned int * refcnt)
 {
     return --(*refcnt);
 }
@@ -674,9 +674,9 @@ enum class CTRLTYPE : int
     MACRO_RETURN,
 };
 
-#define NOT_THROWING            (stopping_flag != CTRLTYPE::THROWING)
-#define RUNNING                 (stopping_flag == CTRLTYPE::RUN)
-#define STOPPING                (stopping_flag == CTRLTYPE::STOP)
+#define NOT_THROWING            (GetStoppingFlag() != CTRLTYPE::THROWING)
+#define RUNNING                 (GetStoppingFlag() == CTRLTYPE::RUN)
+#define STOPPING                (GetStoppingFlag() == CTRLTYPE::STOP)
 
 #define canonical__object(o)    car(o)
 #define procnode__object(o)     cadr(o)

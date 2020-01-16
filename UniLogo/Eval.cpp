@@ -58,7 +58,16 @@ NODE *didnt_get_output = NIL;    // the name of the proc that wanted the OP
 NODE *output_node = NIL;         // the output of the current function
 FIXNUM repcountup = 0;               // up count for repeat
 
-CTRLTYPE stopping_flag = CTRLTYPE::RUN;
+static CTRLTYPE stopping_flag = CTRLTYPE::RUN;
+
+CTRLTYPE GetStoppingFlag()
+{
+    return stopping_flag;
+}
+void SetStoppingFlag(CTRLTYPE f)
+{
+    stopping_flag = f;
+}
 FIXNUM tailcall;    // 0 in sequence, 1 for tail, -1 for arg
 
 FIXNUM g_ValueStatus;

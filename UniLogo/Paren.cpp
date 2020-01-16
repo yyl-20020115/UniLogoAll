@@ -288,7 +288,7 @@ NODE *paren_line(NODE *line)
     while (line != NIL)
     {
         NODE * addition = paren_expr(&line, false);
-        if (stopping_flag == CTRLTYPE::THROWING || addition == Unbound)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING || addition == Unbound)
         {
             // Something went wrong. 
             // For example, a syntax error was detected.
@@ -462,7 +462,7 @@ void treeify_line(NODE *newtree)
         settype(newtree, TREE);
         settree__tree(newtree, childtree);
 
-        if (tree_dk_how || stopping_flag == CTRLTYPE::THROWING)
+        if (tree_dk_how || GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             // make sure this gets re-treeified later
             setgeneration__tree(newtree, Unbound);

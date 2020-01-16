@@ -462,7 +462,7 @@ NODE *lbitsave(NODE *args)
     // same as BITMAP-SAVE but gets file name from logo instruction
     CStringPrintedNode bmpFileName(car(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -471,7 +471,7 @@ NODE *lbitsave(NODE *args)
     if (cdr(args) != NIL)
     {
         NODE *val1 = integer_arg(cdr(args));
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             return Unbound;
         }
@@ -520,7 +520,7 @@ NODE *lgifload(NODE *arg)
 {
     CStringPrintedNode gifFileName(car(arg));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -541,7 +541,7 @@ NODE *lgifsize(NODE *args)
 {
     CStringPrintedNode gifFileName(car(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -565,7 +565,7 @@ NODE *lbitload(NODE *arg)
     // same as BITMAP-LOAD except callable from logo command
     CStringPrintedNode bitmapFileName(car(arg));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -591,7 +591,7 @@ NODE *lbitloadsize(NODE *arg)
     // same as BITMAP-LOAD except callable from logo command
     CStringPrintedNode bitmapFileName(car(arg));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1489,7 +1489,7 @@ NODE *lzoom(NODE *arg)
     ASSERT_TURTLE_INVARIANT;
 
     NODE *val = positive_numeric_arg(arg);
-    if (stopping_flag != CTRLTYPE::THROWING)
+    if (GetStoppingFlag() != CTRLTYPE::THROWING)
     {
         FLONUM temp_zoom = numeric_node_to_flonum(val);
 
@@ -1768,7 +1768,7 @@ NODE *lsetbitindex(NODE *arg)
 
     // set the current bitmap index if within range
     FIXNUM i = getint(nonnegative_int_arg(arg));
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1776,7 +1776,7 @@ NODE *lsetbitindex(NODE *arg)
     if (g_BitmapsLimit <= i)
     {
         GrowBitmapsArray(i + 1);
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             return Unbound;
         }
@@ -2251,7 +2251,7 @@ NODE *lbitpastetoindex(NODE *arg)
     FIXNUM y = int_arg(cdr(cdr(arg)));
     x=x;
     y=y;
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2325,7 +2325,7 @@ NODE *lsetturtle(NODE *args)
     ASSERT_TURTLE_INVARIANT;
 
     NODE * val = ranged_integer_arg(args, -TOTAL_SPECIAL_TURTLES, FIXNUM_MAX);
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2356,7 +2356,7 @@ NODE *lsetturtle(NODE *args)
         {
             hasUniquePen         = boolean_arg(cdr(args));
             overrideHasUniquePen = true;
-            if (stopping_flag == CTRLTYPE::THROWING)
+            if (GetStoppingFlag() == CTRLTYPE::THROWING)
             {
                 return Unbound;
             }

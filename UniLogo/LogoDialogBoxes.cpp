@@ -1269,7 +1269,7 @@ NODE *lwindowcreate(NODE *args)
     }
 
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1331,7 +1331,7 @@ WindowEnableHelper(
 
     bool bEnable = boolean_arg(cdr(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1357,7 +1357,7 @@ WindowDeleteHelper(
 {
     // get args
 	wxString windowkey = ArgumentUtils::cnv_strnode_string(args);
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1457,7 +1457,7 @@ NODE *ldialogcreate(NODE *args)
         callback[0] = L'\0';
     }
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1534,7 +1534,7 @@ NODE *llistboxcreate(NODE *args)
     CClientRectangle clientrect;
     clientrect.InitializeFromInput(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1596,7 +1596,7 @@ NODE *llistboxgetselect(NODE *args)
     // get args
 	wxString listboxname = ArgumentUtils::cnv_strnode_string(args);
 	
-	if (stopping_flag == CTRLTYPE::THROWING)
+	if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1623,7 +1623,7 @@ NODE *llistboxaddstring(NODE *args)
 
     wxString stringname = ArgumentUtils::cnv_strnode_string(cdr(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1649,7 +1649,7 @@ NODE *llistboxdeletestring(NODE *args)
    
     int index = (int)getint(nonnegative_int_arg(cdr(args)));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1697,7 +1697,7 @@ NODE *lcomboboxcreate(NODE *args)
     CClientRectangle clientrect;
     clientrect.InitializeFromInput(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -1851,7 +1851,7 @@ NODE *lscrollbarcreate(NODE *args)
 
 	wxString callback = ArgumentUtils::cnv_strnode_string(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         // an error occured
         return Unbound;
@@ -1924,7 +1924,7 @@ NODE *lscrollbarset(NODE *args)
 
     int pos = (int)int_arg(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         // an error occured
         return Unbound;
@@ -1947,7 +1947,7 @@ NODE *lscrollbarget(NODE *args)
 
 	wxString scrollbarname =ArgumentUtils:: cnv_strnode_string(nextArg);
 	
-	if (stopping_flag == CTRLTYPE::THROWING)
+	if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         // an error occured
         return Unbound;
@@ -1991,7 +1991,7 @@ NODE *lstaticcreate(NODE *args)
     CClientRectangle clientrect;
     clientrect.InitializeFromInput(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2086,7 +2086,7 @@ NODE *lbuttoncreate(NODE *args)
         callback = ArgumentUtils::cnv_strnode_string(nextArg);
     }
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2146,7 +2146,7 @@ NODE *lbuttonupdate(NODE *args)
 
     CStringPrintedNode titlename(car(cdr(args)));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2185,7 +2185,7 @@ NODE *lgroupboxcreate(NODE *args)
     CClientRectangle clientrect;
     clientrect.InitializeFromInput(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2257,7 +2257,7 @@ NODE *lradiobuttoncreate(NODE *args)
     CClientRectangle clientrect;
     clientrect.InitializeFromInput(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2332,7 +2332,7 @@ NODE *lradiobuttonget(NODE *args)
 {
     wxString radiobuttonname = ArgumentUtils::cnv_strnode_string(args);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2355,7 +2355,7 @@ NODE *lradiobuttonset(NODE *args)
 
     bool isPressed = boolean_arg(cdr(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2392,7 +2392,7 @@ NODE *lcheckboxcreate(NODE *args)
     CClientRectangle clientrect;
     clientrect.InitializeFromInput(nextArg);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2467,7 +2467,7 @@ NODE *lcheckboxget(NODE *args)
 {
     wxString checkboxname = ArgumentUtils::cnv_strnode_string(args);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2490,7 +2490,7 @@ NODE *lcheckboxset(NODE *args)
 
     bool check = boolean_arg(cdr(args));
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2562,7 +2562,7 @@ NODE *lquestionbox(NODE *args)
     CStringPrintedNode banner(car(args));
     CStringPrintedNode body(car(cdr(args)), CStringPrintedNode::PRINTLIMITSPECIFIER::WithPrintLimits);
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         // bad input
         return Unbound;
@@ -2593,7 +2593,7 @@ NODE *lselectbox(NODE *args)
     CStringPrintedNode banner(car(args));
 
     NODE * choicesNode = list_arg(cdr(args));
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }

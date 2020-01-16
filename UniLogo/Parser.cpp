@@ -263,10 +263,10 @@ public:
 	{
 		size_t length = this->buffer.length();
 
-		void* ptr = malloc((length+1) * sizeof(wchar_t) + sizeof(unsigned short));
+		unsigned int* ptr = (unsigned int*)malloc((length+1) * sizeof(wchar_t) + sizeof(unsigned int));
 		if (ptr != 0) {
-			*(unsigned short*)ptr = 0;
-			wcsncpy((wchar_t*)((char*)ptr + sizeof(unsigned short)), (const wchar_t*)this->buffer, length + 1);
+			*ptr = 0;
+			wcsncpy((wchar_t*)((char*)ptr + sizeof(unsigned int)), (const wchar_t*)this->buffer, length + 1);
 		}
 
 		return ptr;
@@ -681,8 +681,8 @@ NODE *reader(CTextStream *fileStream, const wchar_t * Prompt)
 	void* p = lineBuffer.TakeContent();
 
 	NODE * line = make_strnode_no_copy(
-		(const wchar_t*)((char*)p+sizeof(unsigned short)),
-		(wchar_t*)p,
+		(const wchar_t*)((char*)p+sizeof(unsigned int)),
+		(unsigned int*)p,
 		l,
 		this_type);
 //#ifdef _WINDOWS

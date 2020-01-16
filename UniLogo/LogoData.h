@@ -24,7 +24,7 @@ extern wchar_t *noparitylow_strnzcpy(wchar_t * dst, const wchar_t * src, size_t 
 extern int low_strncmp(const wchar_t * s1, const wchar_t * s2, size_t len);
 extern int noparity_strncmp(const wchar_t * s1, const wchar_t * s2, size_t len);
 extern int noparitylow_strncmp(const wchar_t * s1, const wchar_t * s2, size_t len);
-extern NODE *make_strnode_no_copy(const wchar_t *strptr, wchar_t *strhead, size_t len, NODETYPES typ);
+extern NODE *make_strnode_no_copy(const wchar_t *strptr, unsigned int *strhead, size_t len, NODETYPES typ);
 extern NODE *make_strnode(const wchar_t *string, int len, NODETYPES typ, wchar_t * (*copy_routine) (wchar_t *, const wchar_t *, size_t));
 extern NODE *make_strnode(const wchar_t *string);
 extern NODE *make_strnode_from_wordlist(NODE * wordlist, int len, NODETYPES typ);

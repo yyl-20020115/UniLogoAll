@@ -11,7 +11,7 @@
 #include<stdlib.h>
 #include<crtdbg.h>
 #endif
-#include <wx/setup.h>
+
 #else
 //not windows
 #endif

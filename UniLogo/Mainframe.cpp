@@ -1274,7 +1274,7 @@ void CMainFrame::OnClose(wxCloseEvent& Event)
                 // Don't exit UniLogo
                 IsTimeToHalt  = false;
                 IsTimeToExit  = false;
-                stopping_flag = CTRLTYPE::RUN;
+                SetStoppingFlag(CTRLTYPE::RUN);
                 Event.Veto();
                 return;
 
@@ -1299,7 +1299,7 @@ void CMainFrame::OnClose(wxCloseEvent& Event)
                     // Give the user a chance to fix the problem.
                     IsTimeToHalt  = false;
                     IsTimeToExit  = false;
-                    stopping_flag = CTRLTYPE::RUN;
+                    SetStoppingFlag(CTRLTYPE::RUN);
                     Event.Veto();
                     return;
                 }

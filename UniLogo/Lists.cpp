@@ -192,7 +192,7 @@ NODE *lfirsts(NODE *args)
                 break;
             }
         }
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             gcref(val);
             return Unbound;
@@ -223,7 +223,7 @@ NODE *lbfs(NODE *args)
                 break;
             }
         }
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             gcref(val);
             return Unbound;
@@ -398,7 +398,7 @@ NODE *llput(NODE *args)
 {
     NODE * newtail = car(args);
     NODE * lst = list_arg(cdr(args));
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         // something is wrong with the inputs
         return Unbound;
@@ -509,7 +509,7 @@ NODE *lsentence(NODE *args)
         }
 
         args = cdr(args);
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             break;
         }
@@ -533,7 +533,7 @@ NODE *lsentence(NODE *args)
         }
     }
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         gcref(sentence.GetList());
         return Unbound;
@@ -977,7 +977,7 @@ FLONUM float_arg(NODE *args)
         NODE *arg = car(args);
         NODE *val = cnv_node_to_numnode(arg);
 
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             // Encountered an error.  Stop processing.
             return 0.0;

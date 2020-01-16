@@ -487,21 +487,21 @@ make_strnode(
     }
 
     // allocate enough to hold the header, the string, and NUL.
-	wchar_t * strhead = (wchar_t *)malloc(sizeof(unsigned short) + (len + 1) * sizeof(wchar_t));
+	unsigned int * strhead = (unsigned int *)malloc(sizeof(unsigned int) + (len + 1) * sizeof(wchar_t));
 	if (strhead == NULL)
     {
         err_logo(ERR_TYPES::OUT_OF_MEM, NIL);
         return Unbound;
     }
-
+    memset(strhead, 0, sizeof(unsigned int) +(len+1)*sizeof(wchar_t));
     // set the "string pointer" to just after the header
-	wchar_t * strptr = (wchar_t*)((char*)strhead + sizeof(unsigned short));
-	memset(strptr, 0, len*sizeof(wchar_t));
+	wchar_t * strptr = (wchar_t*)((char*)strhead + sizeof(unsigned int));
+	
 	copy_routine(strptr, string, len);
 
     // set the reference count to 1.
-    unsigned short *header = (unsigned short *) strhead;
-    setstrrefcnt(header, 1);
+
+    setstrrefcnt(strhead, 1);
 
     NODE * strnode = newnode(typ);
     setstrlen(strnode, len);
@@ -536,21 +536,20 @@ make_strnode_from_wordlist(
     }
 
     // allocate enough to hold the header, the string, and NUL.
-	wchar_t * strhead = (wchar_t *)malloc(sizeof(unsigned short) + (len + 1) * sizeof(wchar_t));
+	unsigned int * strhead = (unsigned int *)malloc(sizeof(unsigned int) + (len + 1) * sizeof(wchar_t));
     if (strhead == NULL)
     {
         err_logo(ERR_TYPES::OUT_OF_MEM, NIL);
         return Unbound;
     }
-
+    memset(strhead, 0, sizeof(unsigned int)+(len+1)*sizeof(wchar_t));
     // set the "string pointer" to just after the header
 	wchar_t * strptr = (wchar_t*)((char*)strhead + sizeof(unsigned short));
-	strptr[len] = L'\0';
+	
 	word_strnzcpy(strptr, wordlist, len);
 
     // set the reference count to 1.
-    unsigned short *header = (unsigned short *) strhead;
-    setstrrefcnt(header, 1);
+    setstrrefcnt(strhead, 1);
 
     NODE * strnode = newnode(typ);
     setstrlen(strnode, len);
@@ -565,23 +564,23 @@ make_strnode_from_wordlist(
 NODE *
 make_strnode_no_copy(
     const wchar_t *strptr,
-	wchar_t       *strhead,
+	unsigned int  *strhead,
     size_t         len,
     NODETYPES   typ
     )
 {
     // increment the reference count
-    unsigned short * header = (unsigned short *) strhead;
-    assert(header != NULL);       // string is in static memory
-    assert(*header != USHRT_MAX); // ref count would overflow
-    incstrrefcnt(header);
+    
+    assert(strhead != NULL);       // string is in static memory
+    assert(*strhead != UINT_MAX); // ref count would overflow
+    incstrrefcnt(strhead);
 
     if (len == 0 && Null_Word != NIL)
     {
         // we will not take this reference, so we must free it.
-        if (decstrrefcnt(header) == 0) 
+        if (decstrrefcnt(strhead) == 0)
         {
-            free(header);
+            free(strhead);
         }
         return Null_Word;
     }

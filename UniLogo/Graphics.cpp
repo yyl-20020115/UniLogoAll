@@ -1511,7 +1511,7 @@ NODE *lbitmapturtle(NODE * arg)
         }
     }
 
-    if (stopping_flag == CTRLTYPE::THROWING)
+    if (GetStoppingFlag() == CTRLTYPE::THROWING)
     {
         return Unbound;
     }
@@ -2755,7 +2755,7 @@ GetColorArgument(
     RGBCOLOR color = 0;
 
     bool haveColor = false;
-    while (stopping_flag != CTRLTYPE::THROWING && !haveColor)
+    while (GetStoppingFlag() != CTRLTYPE::THROWING && !haveColor)
     {
         if (arg == NIL)
         {
@@ -2865,7 +2865,7 @@ setcolor_helper(
 {
     RGBCOLOR color = GetColorArgument(args);
 
-    if (stopping_flag != CTRLTYPE::THROWING)
+    if (GetStoppingFlag() != CTRLTYPE::THROWING)
     {
         if (!GetPenStateForSelectedTurtle().IsErasing)
         {
@@ -2903,7 +2903,7 @@ NODE *lsetpensize(NODE *args)
     {
         // input is of the form [width height]
         NODE * arg = pos_int_vector_arg(args);
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             return Unbound;
         }
@@ -2915,7 +2915,7 @@ NODE *lsetpensize(NODE *args)
     {
         // the input is just the width
         NODE * arg = nonnegative_int_arg(args);
-        if (stopping_flag == CTRLTYPE::THROWING)
+        if (GetStoppingFlag() == CTRLTYPE::THROWING)
         {
             return Unbound;
         }
