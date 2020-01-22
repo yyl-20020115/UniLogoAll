@@ -1,5 +1,0 @@
-to ASET :A :B :C
-  SETITEM :B :A :C
-end
-
-bury "ASET

@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1EC3FBD21E41FDD00CD3533"
                BuildableName = "UniLogo.app"
-               BlueprintName = "UniLogoMac"
+               BlueprintName = "UniLogo"
                ReferencedContainer = "container:UniLogo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1EC3FBD21E41FDD00CD3533"
             BuildableName = "UniLogo.app"
-            BlueprintName = "UniLogoMac"
+            BlueprintName = "UniLogo"
             ReferencedContainer = "container:UniLogo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1EC3FBD21E41FDD00CD3533"
             BuildableName = "UniLogo.app"
-            BlueprintName = "UniLogoMac"
+            BlueprintName = "UniLogo"
             ReferencedContainer = "container:UniLogo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -73,6 +73,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "UniLogo"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

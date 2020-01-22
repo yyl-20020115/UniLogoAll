@@ -1,5 +1,0 @@
-to SETW :R
-  SETPENSIZE SE :R :R
-end
-
-bury "SETW

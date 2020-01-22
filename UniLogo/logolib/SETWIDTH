@@ -1,5 +1,0 @@
-to SETWIDTH :R
-  SETPENSIZE SE :R :R
-end
-
-bury "SETWIDTH
